@@ -1,0 +1,5 @@
+streamlit
+openai
+Pillow
+python-dotenv
+qdrant-client
