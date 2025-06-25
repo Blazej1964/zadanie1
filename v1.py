@@ -270,13 +270,13 @@ if api_key:
 ############################################################################################################################################
 ############################################################################################################################################
 
-        # Obsługa zakładki "Galeria"
-    if selection == "Moja Galeria":
+            # Obsługa zakładki "Galeria"
+    elif selection == "Moja Galeria":
         # Ładuj notatki, jeśli są puste (tylko raz)
         if not st.session_state.notes:
             st.session_state.notes = list_notes_from_db()
 
-        st.markdown("<h2 style='text-align: center; font-weight: bold;'>Galeria zdjęć</h2>", unsafe_allow_html=True) 
+        st.markdown("<h2 style='text-align: center; font-weight: bold;'>Galeria zdjęć</h2>", unsafe_allow_html=True)
 
         # Używamy już załadowanych notatek w sesji
         if st.session_state.notes:
@@ -295,12 +295,16 @@ if api_key:
                             st.image(note["image"], use_container_width=True)  # Użycie szerokości kontenera
                             # Dodajemy margines oraz kontener dla przycisków
                             st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)  # Wyśrodkowanie
+
                             # Przycisk do usuwania zdjęcia z uproszczonym tekstem
                             if st.button("Usuń", key=f"delete_{note['id']}"):
-                                print(f"Próbuję usunąć notatkę o ID: {note['id']}")
-                                delete_note_from_db(note['id'])  # Usunięcie notatki
-                                # Po usunięciu, odśwież notatki
-                                st.session_state.notes = list_notes_from_db()  # Odświeżanie notatek.
+                                confirm = st.radio("Czy na pewno chcesz usunąć to zdjęcie?", ("Tak", "Nie"))
+                                if confirm == "Tak":
+                                    print(f"Próbuję usunąć notatkę o ID: {note['id']}")
+                                    delete_note_from_db(note['id'])  # Usunięcie notatki
+                                    st.session_state.notes = list_notes_from_db()  # Odświeżanie notatek.
+                                elif confirm == "Nie":
+                                    st.success("Usunięcie zdjęcia anulowane.")
                             st.markdown("</div>", unsafe_allow_html=True)  # Zamknięcie kontenera
                 # Dodać odstęp po każdym rzędzie
                 st.markdown("<br>", unsafe_allow_html=True)
