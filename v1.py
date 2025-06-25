@@ -270,7 +270,7 @@ if api_key:
 ############################################################################################################################################
 ############################################################################################################################################
 
-                # Obsługa zakładki "Galeria"
+            # Obsługa zakładki "Galeria"
     elif selection == "Moja Galeria":
         # Zainicjalizuj notes, jeśli nie jest ustawiony
         if 'notes' not in st.session_state:
@@ -302,13 +302,16 @@ if api_key:
 
                             # Przycisk do usuwania zdjęcia z uproszczonym tekstem
                             if st.button("Usuń", key=f"delete_{note['id']}"):
-                                confirm = st.radio("Czy na pewno chcesz usunąć to zdjęcie?", ("Tak", "Nie"))
-                                if confirm == "Tak":
+                                # Dodanie przycisku potwierdzenia
+                                if st.button("Tak, usuń zdjęcie", key=f"confirm_delete_{note['id']}"):
                                     print(f"Próbuję usunąć notatkę o ID: {note['id']}")
                                     delete_note_from_db(note['id'])  # Usunięcie notatki
                                     st.session_state.notes = list_notes_from_db()  # Odświeżanie notatek
-                                elif confirm == "Nie":
+                                    st.success("Zdjęcie zostało usunięte.")
+
+                                if st.button("Nie, nie usuwaj", key=f"cancel_delete_{note['id']}"):
                                     st.success("Usunięcie zdjęcia anulowane.")
+
                             st.markdown("</div>", unsafe_allow_html=True)  # Zamknięcie kontenera
                 # Dodać odstęp po każdym rzędzie
                 st.markdown("<br>", unsafe_allow_html=True)
