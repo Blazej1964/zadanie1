@@ -270,44 +270,42 @@ if api_key:
 ############################################################################################################################################
 ############################################################################################################################################
 
-    elif selection == "Moja Galeria":
+        elif selection == "Moja Galeria":
         # Zainicjalizuj notes, jeśli nie jest ustawiony
-        if 'notes' not in st.session_state:
-            st.session_state.notes = []
+            if 'notes' not in st.session_state:
+                st.session_state.notes = []
 
-        # Ładuj notatki, jeśli są puste (tylko raz)
-        if not st.session_state.notes:
-            st.session_state.notes = list_notes_from_db()
+            # Ładuj notatki, jeśli są puste (tylko raz)
+            if not st.session_state.notes:
+                st.session_state.notes = list_notes_from_db()
 
-        st.markdown("<h2 style='text-align: center; font-weight: bold;'>Galeria zdjęć</h2>", unsafe_allow_html=True)
+            st.markdown("<h2 style='text-align: center; font-weight: bold;'>Galeria zdjęć</h2>", unsafe_allow_html=True)
 
-        # Używamy już załadowanych notatek w sesji
-        if st.session_state.notes:
-            # Grupa notatek w rzędy po trzy zdjęcia
-            rows = []
-            for i in range(0, len(st.session_state.notes), 3):
-                rows.append(st.session_state.notes[i:i + 3])  # Grupowanie zdjęć po trzy
+            # Używamy już załadowanych notatek w sesji
+            if st.session_state.notes:
+                # Grupa notatek w rzędy po trzy zdjęcia
+                rows = []
+                for i in range(0, len(st.session_state.notes), 3):
+                    rows.append(st.session_state.notes[i:i + 3])  # Grupowanie zdjęć po trzy
 
-            # Wyświetlanie zdjęć w tabeli (3 kolumny)
-            for row in rows:
-                cols = st.columns(3)
-                for i, note in enumerate(row):
-                    with cols[i]:
-                        if note["image"]:
-                            # Wyświetlanie zdjęcia o stałej szerokości kontenera
-                            st.image(note["image"], use_container_width=True)  # Użycie szerokości kontenera
-                            # Dodajemy margines oraz kontener dla przycisków
-                            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)  # Wyśrodkowanie
+                # Wyświetlanie zdjęć w tabeli (3 kolumny)
+                for row in rows:
+                    cols = st.columns(3)
+                    for i, note in enumerate(row):
+                        with cols[i]:
+                            if note["image"]:
+                                # Wyświetlanie zdjęcia o stałej szerokości kontenera
+                                st.image(note["image"], use_container_width=True)  # Użycie szerokości kontenera
+                                # Dodajemy margines oraz kontener dla przycisków
+                                st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)  # Wyśrodkowanie
 
-                            # Przycisk do usuwania zdjęcia z uproszczonym tekstem
-                            if st.button("Usuń", key=f"delete_{note['id']}"):
-                                confirm = st.radio("Czy na pewno chcesz usunąć to zdjęcie?", ("Tak", "Nie"))
-                                if confirm == "Tak":
+                                # Przycisk do usuwania zdjęcia
+                                if st.button("Usuń", key=f"delete_{note['id']}"):
                                     print(f"Próbuję usunąć notatkę o ID: {note['id']}")
                                     delete_note_from_db(note['id'])  # Usunięcie notatki
                                     st.session_state.notes = list_notes_from_db()  # Odświeżanie notatek
-                                elif confirm == "Nie":
-                                    st.success("Usunięcie zdjęcia anulowane.")
-                            st.markdown("</div>", unsafe_allow_html=True)  # Zamknięcie kontenera
-                # Dodać odstęp po każdym rzędzie
-                st.markdown("<br>", unsafe_allow_html=True)
+                                    st.success("Zdjęcie zostało usunięte.")  # Informacja zwrotna o usunięciu
+
+                                st.markdown("</div>", unsafe_allow_html=True)  # Zamknięcie kontenera
+                    # Dodać odstęp po każdym rzędzie
+                    st.markdown("<br>", unsafe_allow_html=True)
