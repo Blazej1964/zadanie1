@@ -270,8 +270,12 @@ if api_key:
 ############################################################################################################################################
 ############################################################################################################################################
 
-            # Obsługa zakładki "Galeria"
+                # Obsługa zakładki "Galeria"
     elif selection == "Moja Galeria":
+        # Zainicjalizuj notes, jeśli nie jest ustawiony
+        if 'notes' not in st.session_state:
+            st.session_state.notes = []
+
         # Ładuj notatki, jeśli są puste (tylko raz)
         if not st.session_state.notes:
             st.session_state.notes = list_notes_from_db()
@@ -302,7 +306,7 @@ if api_key:
                                 if confirm == "Tak":
                                     print(f"Próbuję usunąć notatkę o ID: {note['id']}")
                                     delete_note_from_db(note['id'])  # Usunięcie notatki
-                                    st.session_state.notes = list_notes_from_db()  # Odświeżanie notatek.
+                                    st.session_state.notes = list_notes_from_db()  # Odświeżanie notatek
                                 elif confirm == "Nie":
                                     st.success("Usunięcie zdjęcia anulowane.")
                             st.markdown("</div>", unsafe_allow_html=True)  # Zamknięcie kontenera
